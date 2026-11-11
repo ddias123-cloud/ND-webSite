@@ -1,9 +1,9 @@
 {
   "direction": "site-to-github",
   "source_directory": "source",
-  "source_commit": "2a723c42a896ee3dcfdffab159b1e3a55ff8df17",
-  "source_tree": "9fd616b6f5b7a99faeeedfa087955ccaa86b960e",
-  "published_runtime_commit": "703eefcbb44f357a17e220d417667497381f4648",
+  "source_commit": "7286de25767a4842f958cd86fedc40907ef72f2a",
+  "source_tree": "eed7b60ec6a5a22dc9f2134c9cf82c495c4ebc15",
+  "published_runtime_commit": "7286de25767a4842f958cd86fedc40907ef72f2a",
   "site_url": "https://nd-university-demo-1105.guidinggoat1.chatgpt.site",
   "mode": "assistant-workflow",
   "note": "Mirrored after edits in the connected chat. No background watcher or reverse auto-deploy."

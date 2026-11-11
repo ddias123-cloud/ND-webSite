@@ -1,49 +1,95 @@
-# N&D University Demo
+# N&D University
 
-An interactive, bilingual university portal created from the supplied Kazakh HTML screen references.
+A Kazakh/Russian university workspace with server-backed accounts, profiles,
+roles, assignments, submissions, grades, timetables and in-app notifications.
+The current deployment is an owner-private demo. Creating an N&D account does
+not add anyone to the Sites hosting allowlist or make the demo public.
 
-## GitHub source synchronization
+## Development
 
-The source mirror is `https://github.com/ddias123-cloud/ND-webSite/tree/main/source`.
-Changes made with the assistant in this project are copied there after publication
-using the workflow in `AGENTS.md`. This is one-way synchronization performed as
-part of an editing task, not a background filesystem watcher. Changes made on
-GitHub do not deploy the private Site automatically. `github-sync.json` stores
-the destination and `scripts/github-snapshot.mjs` exports only committed source.
-The public GitHub repository never receives account records, local databases,
-password hashes, session cookies or service credentials. Its Pages landing page
-continues to redirect visitors to the private N&D login.
+Node.js 24+ is required; no external packages are needed.
 
-## Open locally
+```
+node scripts/build-auth.mjs
+node --test tests/auth.test.mjs tests/workspace.test.mjs
+node scripts/preview-auth.mjs
+```
 
-Use Node.js 24+: `node scripts/build-auth.mjs`, then `node scripts/preview-auth.mjs`. The preview runs at `http://127.0.0.1:8788` with an isolated test identity and local SQLite database under ignored `.preview/`. No external packages are required. Production is a Worker with a Sites-provisioned D1 binding; static hosting cannot enforce this login.
+The preview is `http://127.0.0.1:8788`, with a test-only platform identity,
+SQLite database and avatar storage under ignored `.preview/`. Production uses
+a Cloudflare Worker, provisioned D1 `DB` and private R2 `BUCKET` bindings.
+SQL files under `drizzle/` are ordered schema-only migrations. Never put account
+records, passwords, credentials or real profile data into migrations.
 
-## Email and password
+`web/product.js` and `web/product.css` implement the current workspace.
+`web/login.js` and `web/login.css` implement registration, login and email link
+screens. The older `web/app.js` and `web/style.css` remain as reference material;
+the current portal does not load their fictional data or role switcher.
 
-The hosting policy remains owner-private. Separate Login and Registration buttons allow independent N&D accounts with user-entered Gmail, Mail.ru or other valid email addresses. New passwords require 8–128 printable ASCII characters, including at least one Latin letter; Cyrillic and spaces are rejected by both the form and server. No default or shared password exists. Existing owner passwords and sessions are preserved, and legacy accounts are imported after a successful login. Passwords are salted and derived with Workers-supported PBKDF2-HMAC-SHA256 (100,000 iterations), and never stored as plaintext or browser storage. Random session tokens are stored as SHA-256 hashes in D1 and sent in Secure/HttpOnly/SameSite=Strict cookies. Sessions expire after eight hours; logout revokes the current token. Same-origin checks, bounded JSON bodies and persisted login throttling protect the endpoints.
+## Accounts and permissions
 
-This is multi-account N&D authentication inside an owner-private demo, not university account administration. The hosting allowlist still controls who can reach the demo; creating an N&D account does not add a viewer to that allowlist. Role switching previews fictional sample data and grants no real university permissions. Email ownership verification, email delivery and password recovery are not implemented. Before a broader launch, use an audited authentication provider and server-backed roles and records. GitHub Pages redirects to the protected Site; the source mirror is public, and runtime account records are never synchronized.
+Users enter their own valid email address. New passwords require 8–128 printable
+ASCII characters, with at least one Latin letter and no spaces or Cyrillic.
+Existing owner passwords and sessions are preserved. Passwords use salted
+PBKDF2-HMAC-SHA256, 100,000 iterations supported by Workers. Session tokens are
+random, stored as SHA-256 hashes and sent through Secure, HttpOnly, SameSite=Strict
+cookies. Sessions bind to the verified platform visitor and expire after 8 hours.
+Logout revokes the current token. Requests use same-origin checks, bounded JSON
+bodies and persistent login/mail throttling.
+
+New accounts start as students. The existing verified legacy account receives
+the administrator profile. Teacher and curator requests require administrator
+approval. Only the administrator can grant or revoke roles; clients cannot
+promote themselves. Teachers access their authored teaching records, deans their
+faculty, curators their assigned faculty and group, and students their own grades
+and group assignments. Rectors and the administrator have a university overview.
+Staff faculty/group scope is assigned by the administrator. This version supports
+one assigned group per teacher. Students fill in their own group and faculty;
+this is not an integration with a university registrar or enrollment approval.
+
+Records are shared in D1. In-app notifications for tasks, grades and schedule
+changes refresh every 20 seconds while the portal is visible. These are not
+background iOS push notifications. Avatar uploads are cropped to 256px WebP
+in the browser, size/type checked by the server, stored privately and served
+only to authorized N&D sessions. No private offline page cache is used.
+
+## Email verification and password recovery
+
+The screens, one-time expiring hashed tokens and mail adapter are implemented.
+Actual email delivery is **not configured**. Set `RESEND_API_KEY` and a verified
+sender in `EMAIL_FROM` through the Sites runtime environment controls when a
+sender account is available. Never commit these values. Missing configuration
+returns an explicit unavailable message; the UI does not pretend a message was
+sent. Password recovery uses a neutral response to avoid disclosing registered
+addresses. Reset links last 30 minutes and verification links 60 minutes. Reset
+revokes all N&D sessions for that account, including legacy sessions. Email
+verification is recorded but not required for this private demo's basic access.
+
+Tests use a mocked email provider; no real delivery has been verified. A broader
+university launch still needs enrollment/identity review, recovery delivery,
+operational support and institution-specific data rules.
 
 ## Private iPhone demo
 
-The owner-private Sites deployment supports installation from Safari with Share → Add to Home Screen. Sign in with the owning ChatGPT account first, register or log in to an N&D account, then add the portal itself (not the platform sign-in page). Keep Open as Web App enabled when that option is shown. The icon, standalone mode and manifest are included; an internet connection and an authorized session are required. Installation is a web app, not an App Store or TestFlight build.
+Open the private deployed URL in Safari, sign in with the owning ChatGPT account,
+log in to N&D, then use Share → Add to Home Screen. Keep Open as Web App enabled
+when shown. This is a web app, not an App Store/TestFlight build; internet and
+an authorized session are required. The access policy remains owner-only.
 
-Access is enforced by the Sites hosting policy and server-side N&D sessions, not by the manifest, robots metadata or role selector. No service worker caches private pages for offline access. The public GitHub Pages landing page redirects to this protected deployment.
+## Publication and GitHub source mirror
 
-## Screens
-
-- Student, rector, dean, curator and teacher interfaces.
-- Kazakh and Russian language switching and light/dark themes.
-- Student timetable, chats, grades, activities, points, opportunities, support and assignments.
-- Staff analytics, faculty students, curator management, grade entry, financial summary and a scanner walkthrough.
-- Browser-local persistence and CSV downloads.
-
-## Demonstration boundaries
-
-All records are examples. Role switching illustrates screen access and is not authentication. Messages, applications and appointments stay in localStorage and are not transmitted. The assistant uses prepared role-specific responses and has no model connection. The scanner shows sample results and does not perform OCR. Assignment files are not uploaded or retained.
-
-Production use requires server-side authentication and authorization, a database, audited role assignments, real integrations, and separate private storage for support records.
+Follow `AGENTS.md`. Changes made in this chat are published to the private Site
+and then mirrored to
+`https://github.com/ddias123-cloud/ND-webSite/tree/main/source`.
+This is task-based one-way synchronization, not a background watcher; changes
+made on GitHub do not deploy the private Site automatically. The repository is
+public. Only committed, sanitized source is exported by
+`scripts/github-snapshot.mjs`; database records, local storage, generated bundles
+and service credentials are excluded. GitHub Pages continues to serve the
+redirect to the private Site, with `source/` excluded from Pages publication.
 
 ## Source references
 
-The user supplied `Рөлдер экрандары N&D.html` and `Студент экрандары N&D.html`. Their visual language, role hierarchy and screen content inform this implementation. Source files are reference material, not runtime dependencies.
+The user supplied `Рөлдер экрандары N&D.html` and `Студент экрандары N&D.html`.
+They inform the visual language and role hierarchy, and are reference material
+rather than runtime dependencies.

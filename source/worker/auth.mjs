@@ -5,10 +5,10 @@ const SESSION_SECONDS = 8 * 60 * 60;
 const ITERATIONS = 100000; // Supported by the Workers Web Crypto runtime.
 const encoder = new TextEncoder();
 const hex = bytes => Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2, '0')).join('');
-const random = n => hex(crypto.getRandomValues(new Uint8Array(n)));
-const sha = async text => hex(await crypto.subtle.digest('SHA-256', encoder.encode(text)));
-const error = (status, code) => Object.assign(new Error(code), {status, code});
-const json = (body, status = 200, headers = {}) => new Response(JSON.stringify(body), {
+export const random = n => hex(crypto.getRandomValues(new Uint8Array(n)));
+export const sha = async text => hex(await crypto.subtle.digest('SHA-256', encoder.encode(text)));
+export const error = (status, code) => Object.assign(new Error(code), {status, code});
+export const json = (body, status = 200, headers = {}) => new Response(JSON.stringify(body), {
   status, headers: {'content-type':'application/json; charset=utf-8','cache-control':'no-store', ...headers}
 });
 const cookie = (value, seconds) => `${COOKIE}=${value}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=${seconds}`;
@@ -47,10 +47,14 @@ export async function session(request, db, user) {
     .bind(tokenHash, user.subject, Date.now()).first();
   if (member) return member;
   // Preserve existing owner sessions and passwords during the transition.
-  return db.prepare(`SELECT a.subject AS id, a.email FROM nd_sessions s
+  const legacy = await db.prepare(`SELECT a.* FROM nd_sessions s
     JOIN nd_accounts a ON a.subject = s.subject
     WHERE s.token_hash = ? AND s.subject = ? AND s.expires_at > ?`)
     .bind(tokenHash, user.subject, Date.now()).first();
+  if(!legacy)return null;
+  await db.prepare(`INSERT INTO nd_members(id,email,password_hash,password_salt,legacy_subject,created_at)
+    VALUES (?,?,?,?,?,?) ON CONFLICT(email) DO NOTHING`).bind(crypto.randomUUID(),legacy.email,legacy.password_hash,legacy.password_salt,legacy.subject,legacy.created_at).run();
+  return db.prepare('SELECT id,email FROM nd_members WHERE email = ?').bind(legacy.email).first();
 }
 
 export function validEmail(email) {
@@ -66,7 +70,7 @@ export function validPassword(password) {
   return password.length >= 8 && password.length <= 128 && /[A-Za-z]/.test(password) && /^[\x21-\x7e]+$/.test(password);
 }
 
-async function body(request) {
+export async function body(request) {
   if (request.headers.get('origin') !== new URL(request.url).origin) throw error(403, 'invalid_origin');
   if (request.headers.get('sec-fetch-site') === 'cross-site') throw error(403, 'invalid_origin');
   if (!request.headers.get('content-type')?.startsWith('application/json')) throw error(415, 'json_required');
@@ -86,7 +90,7 @@ async function body(request) {
   catch { throw error(400, 'invalid_request'); }
 }
 
-async function throttle(db, subject) {
+export async function throttle(db, subject) {
   const now = Date.now();
   const row = await db.prepare(`INSERT INTO nd_auth_attempts(subject, attempts, window_start) VALUES (?, 1, ?)
     ON CONFLICT(subject) DO UPDATE SET

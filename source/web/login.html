@@ -11,7 +11,6 @@
 <body>
 <header><a href="./" class="brand" aria-label="N&D">N<span>&</span>D</a><nav aria-label="Language"><button type="button" data-lang="kk" aria-pressed="true">Қаз</button><button type="button" data-lang="ru" aria-pressed="false">Рус</button></nav></header>
 <main>
-<section class="intro" aria-labelledby="intro-title"><span class="eyebrow"><i></i><span id="private-label">Жеке демо</span></span><h1 id="intro-title">Университетің.<br>Бір кеңістікте.</h1><p id="intro-copy">Сабақ кестесі, тапсырмалар мен университет өмірі — N&D-де.</p><div class="preview-card" aria-hidden="true"><span class="preview-icon">N&D</span><div><b id="preview-title">Өз кеңістігіңе орал</b><span id="preview-copy">Кесте · Бағалар · Кампус</span></div><span class="preview-arrow">↗</span></div></section>
 <section class="auth-card" aria-labelledby="form-title"><span class="card-tag" id="card-tag">N&D АККАУНТЫ</span><div class="auth-tabs" role="group" aria-label="Кіру немесе тіркелу"><button type="button" id="login-tab" data-mode="login" aria-pressed="true">Кіру</button><button type="button" id="register-tab" data-mode="register" aria-pressed="false">Тіркелу</button></div><h2 id="form-title">Кіру</h2><p class="subtitle" id="form-subtitle">Жалғастыру үшін email мен құпиясөзіңді енгіз.</p>
 <form id="auth-form" hidden>
 <label for="email" id="email-label">Email</label><input id="email" name="email" type="email" autocomplete="username" inputmode="email" maxlength="254" required spellcheck="false" autocapitalize="none" placeholder="you@gmail.com">
@@ -20,7 +19,7 @@
 <div id="confirm-field" hidden><label for="confirm" id="confirm-label">Құпиясөзді қайтала</label><input id="confirm" name="confirm" type="password" autocomplete="new-password" maxlength="128"></div>
 <p class="error" id="form-error" role="alert" hidden></p>
 <button class="submit" id="submit" type="submit">Кіру <span aria-hidden="true">↗</span></button>
-</form><p id="loading-error" class="error" role="alert" hidden></p><button id="retry" type="button" hidden>Қайталау</button>
+</form><p id="form-success" class="field-hint" role="status" hidden></p><button type="button" id="forgot-link" class="forgot-link">Құпиясөзді ұмыттың ба?</button><button type="button" id="back-login" class="forgot-link" hidden>Кіруге оралу</button><p id="loading-error" class="error" role="alert" hidden></p><button id="retry" type="button" hidden>Қайталау</button>
 <div class="private-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg><span id="private-note">Жеке демоға тек өз аккаунтыңмен кіресің.</span></div>
 <noscript>Кіру үшін JavaScript қосулы болуы керек.</noscript></section>
 </main><footer><span>N&D / UNIVERSITY PORTAL</span><span id="footer-label">Сенің университет кеңістігің</span></footer>

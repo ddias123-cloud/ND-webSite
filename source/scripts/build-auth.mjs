@@ -20,7 +20,11 @@ if(!fs.existsSync(path.join(project,'web/index.html'))) throw new Error('Missing
 // bypass the Worker authentication boundary.
 fs.rmSync(dist,{recursive:true,force:true});
 fs.mkdirSync(path.join(dist,'server'),{recursive:true});
-const worker=fs.readFileSync('worker/index.mjs','utf8').replace("import {auth,identity,session} from './auth.mjs';",fs.readFileSync('worker/auth.mjs','utf8').replaceAll('export ',''))
+const moduleSource=name=>fs.readFileSync('worker/'+name+'.mjs','utf8').replace(/^import .*;\r?\n/gm,'').replaceAll('export ','');
+const worker=fs.readFileSync('worker/index.mjs','utf8')
+ .replace("import {auth,identity,session} from './auth.mjs';",moduleSource('auth'))
+ .replace("import {workspace} from './workspace.mjs';",moduleSource('workspace'))
+ .replace("import {emailAuth} from './mail.mjs';",moduleSource('mail'))
  .replace("import {assets} from './assets.generated.mjs';",fs.readFileSync('worker/assets.generated.mjs','utf8').replace('export const assets','const assets'));
 fs.writeFileSync(path.join(dist,'server/index.js'),worker);
 fs.mkdirSync(path.join(dist,'.openai'),{recursive:true});

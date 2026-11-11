@@ -9,6 +9,8 @@ export function database(filename=':memory:') {
   if(!exists) sqlite.exec(fs.readFileSync('drizzle/0000_private_auth.sql','utf8'));
   const members=sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='nd_members'").get();
   if(!members) sqlite.exec(fs.readFileSync('drizzle/0001_email_registration.sql','utf8'));
+  const profiles=sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='nd_profiles'").get();
+  if(!profiles) sqlite.exec(fs.readFileSync('drizzle/0002_workspace.sql','utf8'));
   function statement(sql,args=[]) {
     return {
       bind(...params){return statement(sql,params);},

@@ -101,7 +101,7 @@ test('duplicate email is case-insensitive and cannot overwrite an existing passw
   assert.equal((await worker.fetch(request('/api/auth/login',{body:{email:'student@gmail.com',password:'Other123!'}}),{DB:db})).status,401);db.close();
 });
 
-test('existing passwords and sessions survive; legacy account is imported only after a valid login',async()=>{
+test('existing passwords and sessions survive; a valid legacy session imports the account',async()=>{
   const db=database(),oldPassword='Старый пароль with spaces',salt='legacy-test-salt';
   await db.prepare('INSERT INTO nd_accounts(subject,email,password_hash,password_salt,created_at) VALUES (?,?,?,?,?)').bind('owner','owner@example.test',await derive(oldPassword,salt),salt,Date.now()).run();
   const oldToken='b'.repeat(64),hash=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(oldToken))).toString('hex');
@@ -110,7 +110,7 @@ test('existing passwords and sessions survive; legacy account is imported only a
   assert.equal((await (await worker.fetch(request('/api/auth/status',{cookie:oldCookie}),{DB:db})).json()).authenticated,true);
   assert.equal((await worker.fetch(request('/api/auth/register',{body:setup}),{DB:db})).status,409);
   assert.equal((await worker.fetch(request('/api/auth/login',{body:{...setup,password:'Incorrect!'}}),{DB:db})).status,401);
-  assert.equal(db.sqlite.prepare('SELECT COUNT(*) n FROM nd_members').get().n,0);
+  assert.equal(db.sqlite.prepare('SELECT COUNT(*) n FROM nd_members').get().n,1);
   assert.equal((await worker.fetch(request('/api/auth/login',{body:{...setup,password:oldPassword}}),{DB:db})).status,200);
   assert.equal(db.sqlite.prepare('SELECT COUNT(*) n FROM nd_members').get().n,1);
   assert.equal((await worker.fetch(request('/api/auth/logout',{cookie:oldCookie,body:{}}),{DB:db})).status,200);

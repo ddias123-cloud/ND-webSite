@@ -1,7 +1,9 @@
 # N&D University
 
-A Kazakh/Russian university workspace with server-backed accounts, profiles,
-roles, assignments, submissions, grades, timetables and in-app notifications.
+A Kazakh/Russian interactive university demo with server-backed email/password
+login and registration. Its inner interface shows sample student/staff screens,
+role previews, timetable, chats, grades, events and other original demo modules.
+The home greeting is personalized as «Қайырлы күн, Дартай Диас».
 The current deployment is an owner-private demo. Creating an N&D account does
 not add anyone to the Sites hosting allowlist or make the demo public.
 
@@ -21,10 +23,15 @@ a Cloudflare Worker, provisioned D1 `DB` and private R2 `BUCKET` bindings.
 SQL files under `drizzle/` are ordered schema-only migrations. Never put account
 records, passwords, credentials or real profile data into migrations.
 
-`web/product.js` and `web/product.css` implement the current workspace.
+`web/app.js` and `web/style.css` implement the current inner demo interface;
+its role selector previews fictional roles and does not grant server permissions.
+Its sample records and interactions remain browser-local, not real university
+data. `web/session.js` enforces session checks and logout in that interface.
 `web/login.js` and `web/login.css` implement registration, login and email link
-screens. The older `web/app.js` and `web/style.css` remain as reference material;
-the current portal does not load their fictional data or role switcher.
+screens. `web/product.js` and `web/product.css` retain the alternate server-backed
+workspace, but are not loaded by the current demo. Server-backed APIs, schema
+and existing records remain available and preserved; the current inner demo UI
+does not display or modify those records.
 
 ## Accounts and permissions
 
@@ -37,7 +44,7 @@ cookies. Sessions bind to the verified platform visitor and expire after 8 hours
 Logout revokes the current token. Requests use same-origin checks, bounded JSON
 bodies and persistent login/mail throttling.
 
-New accounts start as students. The existing verified legacy account receives
+In the retained server APIs, new accounts start as students. The verified legacy account receives
 the administrator profile. Teacher and curator requests require administrator
 approval. Only the administrator can grant or revoke roles; clients cannot
 promote themselves. Teachers access their authored teaching records, deans their
@@ -47,8 +54,8 @@ Staff faculty/group scope is assigned by the administrator. This version support
 one assigned group per teacher. Students fill in their own group and faculty;
 this is not an integration with a university registrar or enrollment approval.
 
-Records are shared in D1. In-app notifications for tasks, grades and schedule
-changes refresh every 20 seconds while the portal is visible. These are not
+The retained workspace API stores records in D1. Its notifications for tasks, grades and schedule
+changes refresh every 20 seconds when the alternate workspace is used. These are not
 background iOS push notifications. Avatar uploads are cropped to 256px WebP
 in the browser, size/type checked by the server, stored privately and served
 only to authorized N&D sessions. No private offline page cache is used.

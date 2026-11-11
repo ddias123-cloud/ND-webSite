@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#081a35"><meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="N&D">
+<link rel="manifest" href="manifest.webmanifest" crossorigin="use-credentials">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<title>N&D · Кіру</title><link rel="stylesheet" href="login.css"><script defer src="login.js"></script>
+</head>
+<body>
+<header><a href="./" class="brand" aria-label="N&D">N<span>&</span>D</a><nav aria-label="Language"><button type="button" data-lang="kk" aria-pressed="true">Қаз</button><button type="button" data-lang="ru" aria-pressed="false">Рус</button></nav></header>
+<main>
+<section class="intro" aria-labelledby="intro-title"><span class="eyebrow"><i></i><span id="private-label">Жеке демо</span></span><h1 id="intro-title">Университетің.<br>Бір кеңістікте.</h1><p id="intro-copy">Сабақ кестесі, тапсырмалар мен университет өмірі — N&D-де.</p><div class="preview-card" aria-hidden="true"><span class="preview-icon">N&D</span><div><b id="preview-title">Өз кеңістігіңе орал</b><span id="preview-copy">Кесте · Бағалар · Кампус</span></div><span class="preview-arrow">↗</span></div></section>
+<section class="auth-card" aria-labelledby="form-title"><span class="card-tag" id="card-tag">N&D АККАУНТЫ</span><h2 id="form-title">Кіру</h2><p class="subtitle" id="form-subtitle">Аккаунтың тексерілуде…</p>
+<form id="auth-form" hidden>
+<label for="email" id="email-label">Email</label><input id="email" name="email" type="email" autocomplete="username" required readonly spellcheck="false" autocapitalize="none">
+<label for="password" id="password-label">Құпиясөз</label><div class="password-field"><input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required><button type="button" id="show-password" aria-label="Құпиясөзді көрсету" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 12s3-6 10-6 10 6 10 6-3 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+<p class="field-hint" id="password-hint" hidden>Кемінде 15 таңба. Құпиясөзді сақтап қой.</p>
+<div id="confirm-field" hidden><label for="confirm" id="confirm-label">Құпиясөзді қайтала</label><input id="confirm" name="confirm" type="password" autocomplete="new-password" maxlength="128"></div>
+<p class="error" id="form-error" role="alert" hidden></p>
+<button class="submit" id="submit" type="submit">Кіру <span aria-hidden="true">↗</span></button>
+</form><p id="loading-error" class="error" role="alert" hidden></p><button id="retry" type="button" hidden>Қайталау</button>
+<div class="private-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg><span id="private-note">Жеке демоға тек өз аккаунтыңмен кіресің.</span></div>
+<noscript>Кіру үшін JavaScript қосулы болуы керек.</noscript></section>
+</main><footer><span>N&D / UNIVERSITY PORTAL</span><span id="footer-label">Сенің университет кеңістігің</span></footer>
+</body></html>

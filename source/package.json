@@ -1,0 +1,10 @@
+{
+  "name": "nd-private-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-auth.mjs",
+    "test": "node --test tests/auth.test.mjs",
+    "dev": "node scripts/preview-auth.mjs"
+  }
+}

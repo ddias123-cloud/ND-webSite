@@ -1,0 +1,4 @@
+# Keep application source out of the public Pages build.
+exclude:
+  - source
+  - source-sync.json

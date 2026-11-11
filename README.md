@@ -1,25 +1,30 @@
-# N&D University Demo
+# N&D University
 
-An interactive, bilingual university portal created from the supplied Kazakh HTML screen references.
+[Открыть защищённый сайт](https://nd-university-demo-1105.guidinggoat1.chatgpt.site/)
 
-## Open locally
+Актуальные исходники сайта и iPhone веб-приложения находятся в [source](./source).
+Доступ к демо остаётся только у владельца; при входе используется его ChatGPT-аккаунт и отдельный пароль N&D.
 
-Open `dist/index.html` in a modern browser, or serve `dist` with a static web server. No build step or external packages are needed.
+## Как обновляется код
 
-## Included
+Правки в проекте через этот чат → проверка и публикация сайта → копия исходников в `source/`.
+Порядок сохранён в [source/AGENTS.md](./source/AGENTS.md), параметры — в [source/github-sync.json](./source/github-sync.json).
+Последний скопированный коммит и дерево указаны в [source-sync.json](./source-sync.json).
+Это односторонний перенос в рамках работы помощника: фонового наблюдателя нет, правки на GitHub сами по себе не публикуются на закрытом хостинге.
 
-- Student, rector, dean, curator and teacher interfaces.
-- Kazakh and Russian language switching and light/dark themes.
-- Student timetable, chats, grades, activities, points, opportunities, support and assignments.
-- Staff analytics, faculty students, curator management, grade entry, financial summary and a scanner walkthrough.
-- Browser-local persistence and CSV downloads.
+GitHub Pages сохраняет прежний адрес и перенаправляет на защищённый портал. Папка `source` исключена из сборки Pages.
+Этот репозиторий публичный: код доступен для чтения, но пароли, хэши аккаунтов, сессии и данные базы сюда не копируются.
 
-## Demonstration boundaries
+## Локальный запуск для разработки
 
-All records are examples. Role switching illustrates screen access and is not authentication. Messages, applications and appointments stay in localStorage and are not transmitted. The assistant uses prepared role-specific responses and has no model connection. The scanner shows sample results and does not perform OCR. Assignment files are not uploaded or retained.
+Нужен Node.js 24 или новее:
 
-Production use requires server-side authentication and authorization, a database, audited role assignments, real integrations, and separate private storage for support records.
+```sh
+cd source
+node scripts/build-auth.mjs
+node --test tests/auth.test.mjs
+node scripts/preview-auth.mjs
+```
 
-## Source references
-
-The user supplied `Рөлдер экрандары N&D.html` and `Студент экрандары N&D.html`. Their visual language, role hierarchy and screen content inform this implementation. Source files are reference material, not runtime dependencies.
+Предпросмотр: http://127.0.0.1:8788 — отдельная тестовая учётная запись и локальная SQLite-база.
+Рабочая версия использует серверный Worker и D1. Простое открытие HTML-файла не заменяет серверную аутентификацию.

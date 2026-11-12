@@ -11,8 +11,13 @@ Use connected GitHub tools for writes and update main with its inspected head as
 expected SHA, without force. Cloudflare Builds may deploy this subtree after a
 push; keep `cloudflare/wrangler.jsonc` configured fail-closed.
 
-Every request must pass Cloudflare Access and match runtime DEMO_OWNER_EMAIL.
-Never trust client identity headers or silently publish an unprotected fallback.
+App content and API records require the server-side N&D session. Only the account
+matching runtime DEMO_OWNER_EMAIL may register or log in. Initial registration
+also requires the runtime ND_SETUP_CODE secret (at least 24 characters), and
+registration closes after that owner account exists. Login assets are public.
+Never trust client identity headers or remove the owner/session/setup guards.
+Cloudflare Access is not required: its free checkout requested a payment card
+and authorization for charges above free limits, so it was not activated.
 Use only free resources unless the user authorizes a paid plan. R2 is optional
 and is not required by the restored inner demo.
 

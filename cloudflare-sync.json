@@ -1,9 +1,10 @@
 {
   "source_directory": "cloudflare",
-  "source_commit": "329a46a039c2cc3799f1964640727c36e5e3fe95",
-  "source_tree": "8d4be8b8bb342894b340943da70b188cb08f3fa5",
-  "status": "deployment-in-progress",
+  "source_commit": "dbe4df2bf09b20fb477c0c8a3ee5b56c62fa886e",
+  "source_tree": "7016dd280ca0149f336b97f04bd80fe697b9da63",
+  "status": "owner-setup-required",
   "target_worker": "nd-website",
-  "private_access_required": true,
-  "site_url": "https://nd-website.dartajdias49.workers.dev"
+  "site_url": "https://nd-website.dartajdias49.workers.dev",
+  "access": "owner-email-and-password",
+  "registration": "one-time-secret"
 }

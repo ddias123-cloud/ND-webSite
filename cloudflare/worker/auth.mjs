@@ -100,13 +100,13 @@ export async function throttle(db, subject) {
   if (row.attempts > 8) throw error(429, 'too_many_attempts');
 }
 
-async function startSession(db, user, memberId) {
+async function startSession(db, user, memberId,attemptSubject=user.subject) {
   const value = random(32);
   await db.batch([
     db.prepare('DELETE FROM nd_sessions WHERE expires_at <= ?').bind(Date.now()),
     db.prepare('DELETE FROM nd_member_sessions WHERE expires_at <= ?').bind(Date.now()),
     db.prepare('INSERT INTO nd_member_sessions(token_hash, member_id, platform_subject, expires_at) VALUES (?, ?, ?, ?)').bind(await sha(value), memberId, user.subject, Date.now() + SESSION_SECONDS * 1000),
-    db.prepare('DELETE FROM nd_auth_attempts WHERE subject = ?').bind(user.subject)
+    db.prepare('DELETE FROM nd_auth_attempts WHERE subject = ?').bind(attemptSubject)
   ]);
   return json({ok:true}, 200, {'set-cookie':cookie(value, SESSION_SECONDS)});
 }
@@ -135,7 +135,10 @@ export async function auth(request, db) {
       return json({ok:true}, 200, {'set-cookie':cookie('',0)});
     }
     if (!['/api/auth/register','/api/auth/setup','/api/auth/login'].includes(pathname)) return json({error:'not_found'},404);
-    await throttle(db, user.subject);
+    // Cloudflare supplies CF-Connecting-IP at its edge. Hash the value rather
+    // than retaining a raw visitor IP in the login-attempt table.
+    const attemptSubject=user.subject.startsWith('cf-owner:')?user.subject+':ip:'+await sha(request.headers.get('cf-connecting-ip')||'unknown'):user.subject;
+    await throttle(db, attemptSubject);
     const email = typeof data.email === 'string' ? data.email.trim().toLowerCase() : '';
     const password = typeof data.password === 'string' ? data.password : '';
     const registering = pathname.endsWith('/register') || pathname.endsWith('/setup');
@@ -164,7 +167,7 @@ export async function auth(request, db) {
         account = await db.prepare('SELECT id FROM nd_members WHERE email = ?').bind(email).first();
       }
     }
-    return await startSession(db,user,account.id);
+    return await startSession(db,user,account.id,attemptSubject);
   } catch (err) {
     // Never log passwords, request bodies, hashes or cookie tokens.
     return json({error:err.code || 'service_unavailable'},err.status || 503,err.status === 429 ? {'retry-after':'900'} : {});

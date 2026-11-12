@@ -13,17 +13,24 @@ Runtime: Cloudflare Workers Free, provisioned D1 binding `DB`.
 The database ID is resource metadata, not an access credential.
 Do not enable a paid Workers plan or R2 billing for this demo.
 
-Before the app is usable, configure runtime `DEMO_OWNER_EMAIL` in the dashboard
-and protect the entire Worker with Cloudflare Access, allowing the owning
-Cloudflare account only. The entry uses verified `ctx.access` identity and
-checks the owner's email. Every route denies access if either is absent.
-Client-supplied Sites identity headers cannot bypass this check.
+Configure runtime `DEMO_OWNER_EMAIL` and secret `ND_SETUP_CODE` in the dashboard.
+The setup code must have at least 24 characters and is entered by the owner,
+not committed to this repository. Initial registration requires that code and
+the exact allowed email. Registration closes after the owner account exists.
+The owner chooses their N&D password through the registration form themselves.
+Passwords use salted PBKDF2 and sessions use secure HttpOnly cookies.
+Login pages/assets are public; app code, records and pages require an N&D session.
+Client-supplied identity headers cannot bypass this check. Failed logins are
+limited by hashed edge IP so one visitor cannot exhaust another's login budget.
+
+Cloudflare Access is not needed. Its free activation checkout requested a card
+and authorization for overage charges, so that separate service was not activated.
 
 The new host has a new database and new cookies; existing Sites passwords and
-account records are not in this source or automatically copied. After Access
-is configured, register an N&D account on the new host yourself. No default
-password exists. The owner identity permits separate N&D demo accounts inside
-the same private gate. Email recovery delivery is still unconfigured.
+account records are not in this source or automatically copied. After the setup
+code is configured, register an N&D account on the new host yourself. No default
+password exists. Only the configured owner email can register and log in.
+Email recovery delivery is still unconfigured.
 
 ## Checks
 

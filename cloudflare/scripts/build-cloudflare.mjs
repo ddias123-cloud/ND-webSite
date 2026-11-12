@@ -14,7 +14,7 @@ const inner=fs.readFileSync('worker/index.mjs','utf8')
  .replace("import {emailAuth} from './mail.mjs';",moduleSource('mail'))
  .replace("import {assets} from './assets.generated.mjs';",'const assets = '+JSON.stringify(assets)+';')
  .replace('export default {','const portal = {');
-const adapter=fs.readFileSync('worker/cloudflare.mjs','utf8').replace("import portal from './index.mjs';",'');
+const adapter=fs.readFileSync('worker/cloudflare.mjs','utf8').replace(/^import .*;\r?\n/gm,'');
 fs.mkdirSync('dist/server',{recursive:true});fs.writeFileSync('dist/server/index.js',inner+'\n'+adapter);
 fs.writeFileSync('dist/server/portal-test.js',inner+'\nexport default portal;\n');
 fs.writeFileSync('worker/assets.generated.mjs','export const assets = '+JSON.stringify(assets)+';\n');

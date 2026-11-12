@@ -21,7 +21,8 @@ export function cloudflarePortal(inner=portal){return {
           const existing=await env.DB.prepare('SELECT id FROM nd_members WHERE email=?').bind(owner).first();
           if(existing)return json({error:'email_registered'},409);
           const code=typeof env.ND_SETUP_CODE==='string'?env.ND_SETUP_CODE:'';
-          if(code.length<24)return json({error:'setup_unavailable'},503);
+          if(!code)return json({error:'setup_unavailable'},503);
+          if(code.length<24)return json({error:'setup_code_too_short'},503);
           const submitted=typeof data.setupCode==='string'?data.setupCode:'';
           const expectedHash=await sha(code),actualHash=await sha(submitted);let diff=0;
           for(let i=0;i<64;i++)diff|=expectedHash.charCodeAt(i)^actualHash.charCodeAt(i);

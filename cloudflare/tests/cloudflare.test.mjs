@@ -23,6 +23,8 @@ test('initial owner registration needs the setup secret, rejects other emails, a
     let r=await worker.fetch(request('/api/auth/register',{body:{...signup,setupCode:'wrong'}}),env(db),{});assert.equal(r.status,403);assert.equal((await r.json()).error,'invalid_setup_code');
     r=await worker.fetch(request('/api/auth/register',{body:{...signup,email:'other@example.test'}}),env(db),{});assert.equal(r.status,401);
     r=await worker.fetch(request('/api/auth/register',{body:signup}),{DEMO_OWNER_EMAIL:owner,DB:db},{});assert.equal(r.status,503);
+    assert.equal((await r.json()).error,'setup_unavailable');
+    r=await worker.fetch(request('/api/auth/register',{body:signup}),{...env(db),ND_SETUP_CODE:'too-short'},{});assert.equal(r.status,503);assert.equal((await r.json()).error,'setup_code_too_short');
     assert.equal(db.sqlite.prepare('SELECT COUNT(*) n FROM nd_members').get().n,0);
     const cookie=await register(db);
     const status=await (await worker.fetch(request('/api/auth/status',{headers:{cookie}}),env(db),{})).json();assert.equal(status.canRegister,false);assert.equal(status.ownerOnly,true);

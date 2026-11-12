@@ -2,3 +2,5 @@
 exclude:
   - source
   - source-sync.json
+  - cloudflare
+  - cloudflare-sync.json

@@ -1,0 +1,11 @@
+{
+  "name": "nd-cloudflare-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-cloudflare.mjs",
+    "test": "node --test tests/auth.test.mjs tests/workspace.test.mjs tests/cloudflare.test.mjs",
+    "dev": "node scripts/preview-auth.mjs"
+  },
+  "devDependencies": { "wrangler": "4.160.1" }
+}

@@ -1,0 +1,7 @@
+/node_modules/
+/dist/
+/.preview/
+/.wrangler/
+/.dev.vars*
+/.env*
+/worker/assets.generated.mjs

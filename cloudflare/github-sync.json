@@ -1,0 +1,7 @@
+{
+  "repository": "ddias123-cloud/ND-webSite",
+  "branch": "main",
+  "directory": "cloudflare",
+  "direction": "local-cloudflare-to-github",
+  "preserveRootLanding": true
+}

@@ -1,8 +1,9 @@
 {
   "source_directory": "cloudflare",
-  "source_commit": "dc57ce342e38a819279358fbc7e037bcd4d5377f",
-  "source_tree": "0320b615b315d19a6627396901d1f395f0dce45e",
-  "status": "prepared-not-yet-deployed",
+  "source_commit": "329a46a039c2cc3799f1964640727c36e5e3fe95",
+  "source_tree": "8d4be8b8bb342894b340943da70b188cb08f3fa5",
+  "status": "deployment-in-progress",
   "target_worker": "nd-website",
-  "private_access_required": true
+  "private_access_required": true,
+  "site_url": "https://nd-website.dartajdias49.workers.dev"
 }

@@ -10,6 +10,7 @@
     {
       "binding": "DB",
       "database_name": "nd-university-demo",
+      "database_id": "1e9cf702-ca24-4e74-9dfb-3642ad39b862",
       "migrations_dir": "drizzle"
     }
   ],

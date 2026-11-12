@@ -8,9 +8,9 @@ is a separate, unchanged installation.
 
 The repository location is `ddias123-cloud/ND-webSite`, root directory
 `cloudflare`, build command `node scripts/build-cloudflare.mjs`, deploy command
-`npx wrangler deploy`. Runtime: Cloudflare Workers Free, D1 binding `DB`.
-Wrangler automatically provisions a D1 database when its ID is omitted.
-Apply migrations after provisioning: `npx wrangler d1 migrations apply DB --remote`.
+`npx wrangler d1 migrations apply DB --remote && npx wrangler deploy`.
+Runtime: Cloudflare Workers Free, provisioned D1 binding `DB`.
+The database ID is resource metadata, not an access credential.
 Do not enable a paid Workers plan or R2 billing for this demo.
 
 Before the app is usable, configure runtime `DEMO_OWNER_EMAIL` in the dashboard

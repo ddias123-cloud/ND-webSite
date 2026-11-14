@@ -1,8 +1,8 @@
 {
   "source_directory": "cloudflare",
-  "source_commit": "20db9bb6e6135264603579e0578e2698eb344e71",
-  "source_tree": "a828dd44f09ae76377542318ca40790367571703",
-  "status": "owner-setup-required",
+  "source_commit": "67f4fc9d1afeefd5fa35b02594b057b6b9475aa0",
+  "source_tree": "d6499b843a1d2791ba1bba3756093a06900c4c9e",
+  "status": "published",
   "target_worker": "nd-website",
   "site_url": "https://nd-website.dartajdias49.workers.dev",
   "access": "owner-email-and-password",

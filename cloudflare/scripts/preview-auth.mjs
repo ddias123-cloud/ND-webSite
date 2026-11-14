@@ -1,7 +1,9 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import {database} from './local-db.mjs';
-import worker from '../dist/server/index.js';
+// The isolated portal test bundle accepts the local fixture identity below.
+// Production always uses dist/server/index.js and its Cloudflare owner guards.
+import worker from '../dist/server/portal-test.js';
 
 fs.mkdirSync('.preview',{recursive:true});
 const db=database('.preview/auth.sqlite');

@@ -3,7 +3,7 @@ import {assets} from './assets.generated.mjs';
 import {workspace} from './workspace.mjs';
 import {emailAuth} from './mail.mjs';
 
-const publicAssets = new Set(['/login.css','/login.js','/style.css','/themes.css','/theme-init.js','/entry.css','/entry.js','/product.css','/manifest.webmanifest','/assets/Manrope.ttf','/assets/OFL-Manrope.txt','/assets/apple-touch-icon.png','/assets/icon-192.png','/assets/icon-512.png']);
+const publicAssets = new Set(['/login.css','/login.js','/style.css','/themes.css','/theme-init.js','/entry.css','/entry.js','/assistant.css','/product.css','/manifest.webmanifest','/assets/Manrope.ttf','/assets/OFL-Manrope.txt','/assets/apple-touch-icon.png','/assets/icon-192.png','/assets/icon-512.png']);
 const headers = {
   'cache-control':'no-store',
   'x-content-type-options':'nosniff',

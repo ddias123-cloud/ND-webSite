@@ -5,6 +5,13 @@
   let lang='kk',mode=link?link[1]:'login',busy=false,errorCode='',success='',canRegister=true,ownerOnly=false;
   try{const saved=localStorage.getItem('nd-auth-lang');if(['kk','ru'].includes(saved))lang=saved;}catch{}
   const t=(kk,ru)=>lang==='kk'?kk:ru;
+  function paintTheme(){
+    const dark=document.documentElement.dataset.theme!=='light';
+    const label=dark?t('Ашық режимді қосу','Включить светлую тему'):t('Қараңғы режимді қосу','Включить тёмную тему');
+    el('auth-theme-toggle').setAttribute('aria-label',label);
+    el('auth-theme-toggle').setAttribute('title',label);
+    el('auth-theme-toggle').setAttribute('aria-pressed',String(dark));
+  }
   const messages={
     invalid_setup_code:['Жеке демо коды дұрыс емес.','Неверный код частного демо.'],
     setup_unavailable:['Бастапқы код Cloudflare-да әлі орнатылмаған.','Начальный код ещё не настроен в Cloudflare.'],
@@ -23,6 +30,7 @@
     service_unavailable:['Қазір қосылу мүмкін болмады. Қайта көр.','Не удалось подключиться. Попробуй ещё раз.']
   };
   function paint(){
+    paintTheme();
     if(!canRegister&&mode==='register')mode='login';
     const registering=mode==='register',resetting=mode==='reset',normal=['login','register'].includes(mode),passwordMode=normal||resetting;
     document.documentElement.lang=lang;
@@ -67,6 +75,17 @@
       paint();el('auth-form').hidden=false;
     }catch(e){el('form-subtitle').textContent=t('Кіруді бастау мүмкін болмады.','Не удалось загрузить вход.');el('loading-error').textContent=t(...(messages[e.error]||messages.service_unavailable));el('loading-error').hidden=false;el('retry').hidden=false;}
   }
+  el('auth-theme-toggle').addEventListener('click',()=>{
+    const theme=document.documentElement.dataset.theme==='light'?'dark':'light';
+    document.documentElement.dataset.theme=theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#faf8f5':'#0e1726');
+    try{
+      const value=JSON.parse(localStorage.getItem('nd-demo-v1'));
+      const saved=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+      localStorage.setItem('nd-demo-v1',JSON.stringify({...saved,theme}));
+    }catch{}
+    paintTheme();
+  });
   document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;try{localStorage.setItem('nd-auth-lang',lang);}catch{}paint();}));
   function changeMode(value){if(busy)return;mode=value;errorCode='';success='';el('password').value='';el('confirm').value='';el('setup-code').value='';paint();}
   document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>changeMode(b.dataset.mode)));

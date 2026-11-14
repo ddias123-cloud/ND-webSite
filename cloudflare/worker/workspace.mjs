@@ -13,7 +13,7 @@ export async function ensureProfile(db,current,visitor){
   if(p)return p;
   const member=await db.prepare('SELECT legacy_subject FROM nd_members WHERE id=?').bind(current.id).first();
   const owner=member?.legacy_subject===visitor.subject;
-  await db.prepare(`INSERT INTO nd_profiles(member_id,full_name,role,updated_at) VALUES (?,?,?,?) ON CONFLICT(member_id) DO NOTHING`).bind(current.id,owner?'Дартай Диас':'',owner?'owner':'student',Date.now()).run();
+  await db.prepare(`INSERT INTO nd_profiles(member_id,full_name,role,updated_at) VALUES (?,?,?,?) ON CONFLICT(member_id) DO NOTHING`).bind(current.id,owner?'Дартай Диас':current.email.split('@')[0],owner?'owner':'student',Date.now()).run();
   return db.prepare('SELECT p.*,m.email,m.email_verified_at FROM nd_profiles p JOIN nd_members m ON m.id=p.member_id WHERE p.member_id=?').bind(current.id).first();
 }
 

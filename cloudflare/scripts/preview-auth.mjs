@@ -1,12 +1,10 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import {database} from './local-db.mjs';
-// The isolated portal test bundle accepts the local fixture identity below.
-// Production always uses dist/server/index.js and its Cloudflare owner guards.
-import worker from '../dist/server/portal-test.js';
+import worker from '../dist/server/index.js';
 
 fs.mkdirSync('.preview',{recursive:true});
-const db=database('.preview/auth.sqlite');
+const db=database('.preview/cloudflare-accounts.sqlite');
 fs.mkdirSync('.preview/avatars',{recursive:true});
 // Isolated local stand-in for the production private R2 binding.
 const bucket={
@@ -18,11 +16,9 @@ const server=http.createServer(async(req,res)=>{
   try{
     const chunks=[];for await (const chunk of req)chunks.push(chunk);
     const headers=new Headers(req.headers);
-    // Local preview only, never a production fallback or client-controlled field.
-    headers.set('oai-authenticated-user-id','local-preview-owner');
-    headers.set('oai-authenticated-user-email','preview@example.test');
     const request=new Request('http://127.0.0.1:8788'+req.url,{method:req.method,headers,body:['GET','HEAD'].includes(req.method)?undefined:Buffer.concat(chunks)});
-    const response=await worker.fetch(request,{DB:db,BUCKET:bucket},{});
+    // Disposable local fixtures, never the deployed owner's email or setup code.
+    const response=await worker.fetch(request,{DB:db,BUCKET:bucket,DEMO_OWNER_EMAIL:'preview-owner@example.test',ND_SETUP_CODE:'local-fixture-setup-code-only-1234567890'},{});
     res.writeHead(response.status,Object.fromEntries(response.headers));res.end(Buffer.from(await response.arrayBuffer()));
   }catch{res.writeHead(500);res.end('Preview error');}
 });

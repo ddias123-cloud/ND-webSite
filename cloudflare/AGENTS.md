@@ -11,11 +11,13 @@ Use connected GitHub tools for writes and update main with its inspected head as
 expected SHA, without force. Cloudflare Builds may deploy this subtree after a
 push; keep `cloudflare/wrangler.jsonc` configured fail-closed.
 
-App content and API records require the server-side N&D session. Only the account
-matching runtime DEMO_OWNER_EMAIL may register or log in. Initial registration
-also requires the runtime ND_SETUP_CODE secret (at least 24 characters), and
-registration closes after that owner account exists. Login assets are public.
-Never trust client identity headers or remove the owner/session/setup guards.
+App content and API records require the server-side N&D session. Student signup
+is open at the user's explicit request. New email/password accounts are students;
+client role fields and forged identity headers must never grant staff access.
+The existing DEMO_OWNER_EMAIL account retains its password, sessions and owner
+permissions. Only initial registration of that reserved owner email requires
+ND_SETUP_CODE (at least 24 characters); use /account#owner-setup for that flow.
+Login assets are public. Preserve session checks and the owner setup guard.
 Cloudflare Access is not required: its free checkout requested a payment card
 and authorization for charges above free limits, so it was not activated.
 Use only free resources unless the user authorizes a paid plan. R2 is optional

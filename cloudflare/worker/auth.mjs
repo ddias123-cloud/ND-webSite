@@ -1,5 +1,5 @@
-// The enclosing Sites deployment remains owner-private. N&D accounts use their
-// own email addresses; each session also binds to the platform visitor identity.
+// N&D accounts use their own email addresses. Sessions bind to a trusted
+// platform identity or, on Cloudflare, the server-supplied installation realm.
 const COOKIE = '__Host-nd-session';
 const SESSION_SECONDS = 8 * 60 * 60;
 const ITERATIONS = 100000; // Supported by the Workers Web Crypto runtime.

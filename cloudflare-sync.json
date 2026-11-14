@@ -1,10 +1,11 @@
 {
   "source_directory": "cloudflare",
-  "source_commit": "836b2d56455bf7a25a22b8b45346785fd5773ebd",
-  "source_tree": "2aec6092b6eb8b8884a1f04f9b04804d410f506c",
+  "source_commit": "468f0617fcb64ed1acd2db1de4f42dd96962a944",
+  "source_tree": "0155974c9a4b2d4ff978f05718e67348693060d4",
   "status": "published",
   "target_worker": "nd-website",
   "site_url": "https://nd-website.dartajdias49.workers.dev",
-  "access": "owner-email-and-password",
-  "registration": "one-time-secret"
+  "access": "email-and-password",
+  "registration": "student-self-service",
+  "owner_bootstrap": "one-time-secret"
 }

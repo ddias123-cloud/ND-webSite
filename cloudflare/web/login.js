@@ -2,7 +2,8 @@
 (() => {
   const el=id=>document.getElementById(id);
   const link=location.hash.match(/^#(verify|reset)\/([a-f0-9]{64})$/);
-  let lang='kk',mode=link?link[1]:'login',busy=false,errorCode='',success='',canRegister=true,ownerOnly=false;
+  const ownerSetup=location.hash==='#owner-setup';
+  let lang='kk',mode=link?link[1]:ownerSetup?'register':'login',busy=false,errorCode='',success='',canRegister=true,ownerOnly=false;
   try{const saved=localStorage.getItem('nd-auth-lang');if(['kk','ru'].includes(saved))lang=saved;}catch{}
   const t=(kk,ru)=>lang==='kk'?kk:ru;
   function paintTheme(){
@@ -43,7 +44,7 @@
     const labels={login:[t('Қайта оралуыңмен','С возвращением'),t('Email мен құпиясөзіңді енгіз.','Введи свою почту и пароль.'),t('Кіру','Войти')],register:[t('Аккаунт жаса','Создай аккаунт'),t('Өз email-ыңды енгізіп, құпиясөз ойлап тап.','Укажи свою почту и придумай пароль.'),t('Тіркелу','Зарегистрироваться')],forgot:[t('Құпиясөзді қалпына келтіру','Восстановление пароля'),t('Аккаунтыңның email-ын енгіз.','Введи почту своего аккаунта.'),t('Сілтеме сұрату','Запросить ссылку')],reset:[t('Жаңа құпиясөз','Новый пароль'),t('Аккаунтың үшін жаңа құпиясөз орнат.','Задай новый пароль для своего аккаунта.'),t('Құпиясөзді сақтау','Сохранить пароль')],verify:[t('Email растау','Подтверждение почты'),t('Email мекенжайын растау үшін төмендегі батырманы бас.','Нажми кнопку ниже, чтобы подтвердить почту.'),t('Email растау','Подтвердить почту')]};
     el('form-title').textContent=labels[mode][0];el('form-subtitle').textContent=labels[mode][1];document.title='N&D · '+labels[mode][0];
     document.querySelector('.auth-tabs').hidden=!normal||!canRegister;
-    el('setup-field').hidden=!(ownerOnly&&registering);el('setup-code').required=ownerOnly&&registering;
+    el('setup-field').hidden=!((ownerOnly||ownerSetup)&&registering);el('setup-code').required=(ownerOnly||ownerSetup)&&registering;
     el('setup-label').textContent=t('Жеке демо коды','Код частного демо');el('setup-hint').textContent=t('Cloudflare-да өзің орнатқан бастапқы код. Тек алғашқы тіркелуге керек.','Начальный код, который ты задал в Cloudflare. Нужен только при первой регистрации.');
     el('email').hidden=!normal&&mode!=='forgot';el('email-label').hidden=el('email').hidden;el('email').required=!el('email').hidden;
     el('password-label').hidden=!passwordMode;document.querySelector('.password-field').hidden=!passwordMode;el('password').required=passwordMode;
